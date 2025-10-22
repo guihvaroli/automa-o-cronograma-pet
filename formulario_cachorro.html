@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+  <h1>{{ titulo }}</h1>
+  <form method="POST" action="">
+      {{ form.hidden_tag() }} <div class="mb-3">
+          {{ form.nome.label(class="form-label") }}
+          {{ form.nome(class="form-control") }}
+      </div>
+      <div class="mb-3">
+          {{ form.data_nascimento.label(class="form-label") }}
+          {{ form.data_nascimento(class="form-control", type="date") }}
+      </div>
+      <div class="mb-3">
+          {{ form.proprietario.label(class="form-label") }}
+          {{ form.proprietario(class="form-control") }}
+      </div>
+      <div class="mb-3">
+          {{ form.genero.label(class="form-label") }}
+          {{ form.genero(class="form-select") }}
+      </div>
+      <div class="mb-3">
+          {{ form.grau_energia.label(class="form-label") }}
+          {{ form.grau_energia(class="form-select") }}
+      </div>
+      <div class="form-check mb-3">
+          {{ form.castrado(class="form-check-input") }}
+          {{ form.castrado.label(class="form-check-label") }}
+      </div>
+      <div class="form-check mb-3">
+          {{ form.reativo_caes(class="form-check-input") }}
+          {{ form.reativo_caes.label(class="form-check-label") }}
+      </div>
+      <div class="form-check mb-3">
+          {{ form.reativo_pessoas(class="form-check-input") }}
+          {{ form.reativo_pessoas.label(class="form-check-label") }}
+      </div>
+      <div class="mb-3">
+          {{ form.restricao_alimentos.label(class="form-label") }}
+          {{ form.restricao_alimentos(class="form-control", rows=3) }}
+      </div>
+      {{ form.submit(class="btn btn-primary") }}
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}
