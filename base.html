@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Libertá Animale{% endblock %}</title>
+    <!-- Carrega a fonte Inter do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Carrega nosso arquivo de estilo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    
+    <!-- Cabeçalho Verde Superior -->
+    <header class="header-verde"></header>
+
+    <!-- Barra de Navegação com Logo -->
+    <nav class="navbar-custom">
+      
+      <a class="logo-text" href="{{ url_for('index') }}">
+        
+        <!-- 
+          MODIFICAÇÃO AQUI:
+          1. Altura da imagem aumentada para 60px.
+          2. Adicionado um <span> com o texto ao lado da imagem.
+        -->
+        <img src="{{ url_for('static', filename='animais.png') }}" alt="Libertá Animale" height="60">
+        <span>Libertá Animale</span>
+        
+      </a>
+      
+    </nav>
+
+    <!-- Conteúdo Principal da Página -->
+    <main class="main-container">
+      
+      <!-- Alertas (Flash Messages) -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <!-- Você pode estilizar isso melhor no style.css se quiser -->
+            <div class="alert alert-{{ category }}" style="background-color: #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- O bloco de conteúdo que as outras páginas vão preencher -->
+      {% block content %}{% endblock %}
+
+    </main>
+    
+  </body>
+</html>
+

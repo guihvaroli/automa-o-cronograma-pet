@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+
+  <!-- Título da Página -->
+  <div class="page-header">
+    <h1 class="page-title">{{ titulo }}</h1>
+  </div>
+
+  <!-- 
+    Este formulário NÃO usa o "content-box" preto.
+    Ele usa as classes do nosso style.css (.form-row, .form-col-half, etc.)
+  -->
+  <form method="POST" action="">
+      {{ form.hidden_tag() }} <!-- Proteção CSRF -->
+
+      <!-- Div que agrupa as colunas do formulário -->
+      <div class="form-row">
+        
+        <!-- Coluna da Esquerda -->
+        <div class="form-col-half">
+          <fieldset class="form-section">
+            <legend>Informações Básicas</legend>
+            
+            <div style="margin-bottom: 1rem;">
+                {{ form.nome.label(class="form-label") }}
+                {{ form.nome(class="form-control", placeholder="Nome do pet") }}
+            </div>
+            <div style="margin-bottom: 1rem;">
+                {{ form.data_nascimento.label(class="form-label") }}
+                {{ form.data_nascimento(class="form-control", type="date") }}
+            </div>
+            <div style="margin-bottom: 1rem;">
+                {{ form.proprietario.label(class="form-label") }}
+                {{ form.proprietario(class="form-control", placeholder="Nome do dono") }}
+            </div>
+             <div style="margin-bottom: 1rem;">
+                {{ form.genero.label(class="form-label") }}
+                {{ form.genero(class="form-select") }}
+            </div>
+            <div style="margin-bottom: 1rem;">
+                {{ form.classificacao.label(class="form-label") }}
+                {{ form.classificacao(class="form-control", placeholder="Ex: Porte Pequeno, Raça...") }}
+            </div>
+            <div style="margin-bottom: 1rem;">
+                {{ form.grau_energia.label(class="form-label") }}
+                {{ form.grau_energia(class="form-select") }}
+            </div>
+            <div style="margin-bottom: 1rem;">
+                {{ form.restricao_alimentos.label(class="form-label") }}
+                {{ form.restricao_alimentos(class="form-control", rows=3, placeholder="Alguma alergia ou restrição?") }}
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Atividades e Frequência</legend>
+            <div style="margin-bottom: 1rem;">
+                {{ form.frequencia_semanal.label(class="form-label") }}
+                {{ form.frequencia_semanal(class="form-control", type="number", min="1") }}
+            </div>
+             <div style="margin-bottom: 1rem;">
+                {{ form.duracao_passeio.label(class="form-label") }}
+                {{ form.duracao_passeio(class="form-control", type="number", min="0") }}
+            </div>
+             <div style="margin-bottom: 1rem;">
+                {{ form.grupo_passeio.label(class="form-label") }}
+                {{ form.grupo_passeio(class="form-control", placeholder="Ex: Turma da manhã, Cães reativos...") }}
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Coluna da Direita (Checkboxes) -->
+        <div class="form-col-half">
+          <fieldset class="form-section">
+            <legend>Comportamento e Características</legend>
+            
+            <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.castrado(class="form-check-input") }}
+                {{ form.castrado.label(class="form-check-label") }}
+            </div>
+            <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.reativo_caes(class="form-check-input") }}
+                {{ form.reativo_caes.label(class="form-check-label") }}
+            </div>
+            <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.reativo_pessoas(class="form-check-input") }}
+                {{ form.reativo_pessoas.label(class="form-check-label") }}
+            </div>
+             <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.gosta_contato(class="form-check-input") }}
+                {{ form.gosta_contato.label(class="form-check-label") }}
+            </div>
+            <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.responde_estimulos(class="form-check-input") }}
+                {{ form.responde_estimulos.label(class="form-check-label") }}
+            </div>
+             <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.passeia_na_praca(class="form-check-input") }}
+                {{ form.passeia_na_praca.label(class="form-check-label") }}
+            </div>
+             <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.enriquecimento_ambiental(class="form-check-input") }}
+                {{ form.enriquecimento_ambiental.label(class="form-check-label") }}
+            </div>
+             <div style="margin-bottom: 1rem;" class="form-check">
+                {{ form.atividade_mental(class="form-check-input") }}
+                {{ form.atividade_mental.label(class="form-check-label") }}
+            </div>
+          </fieldset>
+
+           <fieldset class="form-section">
+            <legend>Histórico</legend>
+             <div style="margin-bottom: 1rem;">
+                {{ form.presencas.label(class="form-label") }}
+                {{ form.presencas(class="form-control", rows=5, placeholder="Ex: 20/10 - ok, 22/10 - faltou...") }}
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Botões de Ação com nosso estilo personalizado -->
+      <div class="form-actions">
+          {{ form.submit(class="btn-custom-verde") }}
+          <a href="{{ url_for('index') }}" class="btn-secondary">Cancelar</a>
+      </div>
+  </form>
+  
+{% endblock %}

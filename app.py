@@ -4,14 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, SelectField, BooleanField, TextAreaField, SubmitField, IntegerField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import DataRequired, Optional
 
 # --- Configuração ---
 app = Flask(__name__)
 # Chave secreta para segurança dos formulários (CSRF)
-# Em produção, mude isso para algo aleatório e secreto
 app.config['SECRET_KEY'] = 'uma-chave-secreta-muito-dificil-de-adivinhar'
-
 # Configuração do Banco de Dados SQLite
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'petshop.db')
@@ -21,6 +19,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
 # --- Modelo do Banco de Dados ---
 class Cachorro(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,7 +28,6 @@ class Cachorro(db.Model):
     genero = db.Column(db.String(1), nullable=False) # 'M' ou 'F'
     proprietario = db.Column(db.String(100), nullable=False)
     
-    # Campos adicionais
     classificacao = db.Column(db.String(50), default='')
     castrado = db.Column(db.Boolean, default=False)
     grau_energia = db.Column(db.String(1), nullable=False) # 'B', 'M', 'A'
@@ -45,132 +43,100 @@ class Cachorro(db.Model):
     grupo_passeio = db.Column(db.String(50), default='')
     enriquecimento_ambiental = db.Column(db.Boolean, default=False)
     atividade_mental = db.Column(db.Boolean, default=False)
-    presencas = db.Column(db.Text, default='') # Pode ser melhorado no futuro
+    presencas = db.Column(db.Text, default='')
 
     def __repr__(self):
         return f'<Cachorro {self.nome}>'
 
+
 # --- Formulário ---
 class CachorroForm(FlaskForm):
-    # Opções
-    GENERO_CHOICES = [('M', 'Macho'), ('F', 'Fêmea')]
-    ENERGIA_CHOICES = [('B', 'Baixo'), ('M', 'Médio'), ('A', 'Alto')]
-
-    # Informações básicas
     nome = StringField('Nome', validators=[DataRequired()])
-    data_nascimento = DateField('Data de Nascimento (AAAA-MM-DD)', format='%Y-%m-%d', validators=[DataRequired()])
-    genero = SelectField('Gênero', choices=GENERO_CHOICES, validators=[DataRequired()])
+    data_nascimento = DateField('Data de Nascimento (AAAA-MM-DD)', validators=[DataRequired()])
+    genero = SelectField('Gênero', choices=[('M', 'Macho'), ('F', 'Fêmea')], validators=[DataRequired()])
     proprietario = StringField('Proprietário', validators=[DataRequired()])
+    classificacao = StringField('Classificação (Ex: Porte Pequeno, Raça)', validators=[Optional()])
     
-    # Características e comportamento
-    classificacao = StringField('Classificação (Ex: Porte, Raça)')
     castrado = BooleanField('Castrado')
-    grau_energia = SelectField('Grau de Energia', choices=ENERGIA_CHOICES, validators=[DataRequired()])
+    grau_energia = SelectField('Grau de Energia', choices=[('B', 'Baixo'), ('M', 'Médio'), ('A', 'Alto')], validators=[DataRequired()])
     reativo_caes = BooleanField('Reativo a cães')
     reativo_pessoas = BooleanField('Reativo a pessoas')
-    restricao_alimentos = TextAreaField('Restrição de Alimentos')
+    restricao_alimentos = TextAreaField('Restrição de Alimentos (Opcional)', validators=[Optional()])
     gosta_contato = BooleanField('Gosta de contato físico')
     responde_estimulos = BooleanField('Responde a estímulos (brinquedos, etc)')
 
-    # Informações de atividades
-    frequencia_semanal = IntegerField('Frequência Semanal (visitas)', default=1, validators=[DataRequired(), NumberRange(min=0)])
+    frequencia_semanal = IntegerField('Frequência Semanal (visitas)', validators=[DataRequired()])
     passeia_na_praca = BooleanField('Passeia na praça')
-    duracao_passeio = IntegerField('Duração do Passeio (minutos)', default=30, validators=[DataRequired(), NumberRange(min=0)])
-    grupo_passeio = StringField('Grupo do Passeio')
+    duracao_passeio = IntegerField('Duração do Passeio (minutos)', validators=[DataRequired()])
+    grupo_passeio = StringField('Grupo do Passeio (Opcional)', validators=[Optional()])
     enriquecimento_ambiental = BooleanField('Faz enriquecimento ambiental')
     atividade_mental = BooleanField('Faz atividade mental')
-    presencas = TextAreaField('Registro de Presenças (Ex: 20/10, 22/10...)')
+    presencas = TextAreaField('Registro de Presenças (Ex: 20/10, 22/10...)', validators=[Optional()])
     
     submit = SubmitField('Salvar')
 
+
 # --- Rotas (Views) ---
 
+# Rota para Listar todos os cachorros (READ) E PESQUISAR
 @app.route('/')
 def index():
-    """ Rota principal: Lista todos os cachorros. (READ) """
-    cachorros = Cachorro.query.all()
-    return render_template('index.html', cachorros=cachorros)
+    # Pega o termo de pesquisa da URL (ex: /?pesquisa=Avelã)
+    query = request.args.get('Pesquisa', '') 
+    
+    if query:
+        # Se houver uma pesquisa, filtra o banco de dados (ilike faz ser case-insensitive)
+        # Busca por nome OU proprietário
+        search_term = f'%{query}%'
+        cachorros = Cachorro.query.filter(
+            db.or_(
+                Cachorro.nome.ilike(search_term),
+                Cachorro.proprietario.ilike(search_term)
+            )
+        ).all()
+    else:
+        # Se não houver pesquisa, pega todos
+        cachorros = Cachorro.query.all()
+        
+    # Passa a variável 'query' para o template para o input lembrar o que foi digitado
+    return render_template('index.html', cachorros=cachorros, query=query)
 
+
+# Rota para Adicionar um novo cachorro (CREATE)
 @app.route('/adicionar', methods=['GET', 'POST'])
 def adicionar():
-    """ Rota para Adicionar um novo cachorro. (CREATE) """
     form = CachorroForm()
     if form.validate_on_submit():
-        # Coleta dados do formulário e cria um novo objeto Cachorro
-        novo_cachorro = Cachorro(
-            nome=form.nome.data,
-            data_nascimento=form.data_nascimento.data,
-            genero=form.genero.data,
-            proprietario=form.proprietario.data,
-            classificacao=form.classificacao.data,
-            castrado=form.castrado.data,
-            grau_energia=form.grau_energia.data,
-            reativo_caes=form.reativo_caes.data,
-            reativo_pessoas=form.reativo_pessoas.data,
-            restricao_alimentos=form.restricao_alimentos.data,
-            gosta_contato=form.gosta_contato.data,
-            responde_estimulos=form.responde_estimulos.data,
-            frequencia_semanal=form.frequencia_semanal.data,
-            passeia_na_praca=form.passeia_na_praca.data,
-            duracao_passeio=form.duracao_passeio.data,
-            grupo_passeio=form.grupo_passeio.data,
-            enriquecimento_ambiental=form.enriquecimento_ambiental.data,
-            atividade_mental=form.atividade_mental.data,
-            presencas=form.presencas.data
-        )
-        # Salva no banco de dados
+        novo_cachorro = Cachorro()
+        form.populate_obj(novo_cachorro) # Popula o objeto com os dados do form
         db.session.add(novo_cachorro)
         db.session.commit()
-        flash('Cachorro cadastrado com sucesso!', 'success')
+        flash(f'Cachorro "{novo_cachorro.nome}" cadastrado com sucesso!', 'success')
         return redirect(url_for('index'))
-    # Se for GET ou o formulário for inválido, mostra a página do formulário
     return render_template('form_cachorro.html', form=form, titulo='Adicionar Cachorro')
 
+# Rota para Editar um cachorro (UPDATE)
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
-    """ Rota para Editar um cachorro existente. (UPDATE) """
     cachorro = Cachorro.query.get_or_404(id)
-    form = CachorroForm(obj=cachorro) # Pré-popula o formulário com os dados do cachorro
-
+    form = CachorroForm(obj=cachorro) # Preenche o form com dados existentes
     if form.validate_on_submit():
-        # Atualiza o objeto 'cachorro' com os dados do formulário
-        cachorro.nome = form.nome.data
-        cachorro.data_nascimento = form.data_nascimento.data
-        cachorro.genero = form.genero.data
-        cachorro.proprietario = form.proprietario.data
-        cachorro.classificacao = form.classificacao.data
-        cachorro.castrado = form.castrado.data
-        cachorro.grau_energia = form.grau_energia.data
-        cachorro.reativo_caes = form.reativo_caes.data
-        cachorro.reativo_pessoas = form.reativo_pessoas.data
-        cachorro.restricao_alimentos = form.restricao_alimentos.data
-        cachorro.gosta_contato = form.gosta_contato.data
-        cachorro.responde_estimulos = form.responde_estimulos.data
-        cachorro.frequencia_semanal = form.frequencia_semanal.data
-        cachorro.passeia_na_praca = form.passeia_na_praca.data
-        cachorro.duracao_passeio = form.duracao_passeio.data
-        cachorro.grupo_passeio = form.grupo_passeio.data
-        cachorro.enriquecimento_ambiental = form.enriquecimento_ambiental.data
-        cachorro.atividade_mental = form.atividade_mental.data
-        cachorro.presencas = form.presencas.data
-        
-        # Salva as alterações no banco
+        # Atualiza os dados do objeto 'cachorro' com os dados do formulário
+        form.populate_obj(cachorro)
         db.session.commit()
-        flash('Dados do cachorro atualizados com sucesso!', 'success')
+        flash(f'Dados do "{cachorro.nome}" atualizados!', 'success')
         return redirect(url_for('index'))
     
-    # Se for um request GET, mostra o formulário pré-populado
+    # Se o formulário for carregado (GET) ou se for inválido (POST)
     return render_template('form_cachorro.html', form=form, titulo='Editar Cachorro')
 
+# Rota para Deletar um cachorro (DELETE)
 @app.route('/deletar/<int:id>', methods=['POST'])
 def deletar(id):
-    """ Rota para Deletar um cachorro. (DELETE) """
     cachorro = Cachorro.query.get_or_404(id)
+    nome_cachorro = cachorro.nome
     db.session.delete(cachorro)
     db.session.commit()
-    flash('Cachorro removido com sucesso.', 'info')
+    flash(f'Cachorro "{nome_cachorro}" removido com sucesso.', 'info')
     return redirect(url_for('index'))
 
-# Permite rodar o app com "python app.py"
-if __name__ == '__main__':
-    app.run(debug=True)

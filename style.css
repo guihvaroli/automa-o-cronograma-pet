@@ -1,0 +1,297 @@
+/* * Arquivo de Estilo para o Petshop
+ */
+
+/* --- Importação de Fontes --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+/* NOVA FONTE PARA O TÍTULO */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap');
+
+
+/* --- Variáveis de Cor (baseado no seu design) --- */
+:root {
+  --verde-liberta: #3a8c5a;
+  --laranja-liberta: #e87c33;
+  --fundo-claro: #f7f7f5;
+  --cinza-escuro: #222;
+  --branco: #ffffff;
+}
+
+/* --- Estilos Globais --- */
+body {
+  font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+  background-color: var(--fundo-claro);
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Cabeçalho (Header) --- */
+.header-verde {
+  background-color: var(--verde-liberta);
+  height: 25px;
+  width: 100%;
+  border-bottom: 2px solid var(--laranja-liberta); /* Adiciona a linha laranja */
+}
+
+.navbar-custom {
+  background-color: var(--fundo-claro);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo-text {
+  font-weight: bold;
+  color: var(--verde-liberta);
+  text-decoration: none; 
+  display: flex; 
+  align-items: center; /* Alinha verticalmente a imagem e o texto */
+}
+
+.logo-text img {
+  margin-right: 10px; 
+}
+
+.logo-text span {
+  font-family: 'Pacifico', cursive; 
+  font-size: 2rem; 
+  font-weight: normal; 
+  font-style: normal; 
+  line-height: 1; 
+  padding-top: 5px; 
+}
+
+/* --- Container Principal --- */
+.main-container {
+  padding: 1.5rem 2rem;
+}
+
+/* --- Cabeçalho da Página (Título + Pesquisa) --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap; /* Para responsividade */
+}
+
+/* * * ESSA FOI A SEÇÃO ALTERADA 
+ *
+ */
+.page-title {
+  color: var(--laranja-liberta);
+  font-size: 2.75rem; /* Um pouco maior */
+  font-weight: 800; /* Extra-bold */
+  font-family: 'Nunito', sans-serif; /* A NOVA FONTE */
+  
+  /* --- MUDANÇAS APLICADAS --- */
+  /* Removemos o display, border-bottom e padding-bottom */
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.search-bar input[type="text"] {
+  border: none;
+  border-bottom: 2px dashed #aaa;
+  background-color: transparent;
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+
+.search-bar input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: var(--laranja-liberta);
+}
+
+/* --- Caixa de Conteúdo (PARA FORMULÁRIOS) --- */
+.content-box {
+  background-color: var(--cinza-escuro); 
+  color: var(--branco);
+  padding: 2rem;
+  border-radius: 15px;
+}
+
+/* --- Botões --- */
+.btn-custom-verde {
+  background-color: var(--verde-liberta);
+  color: var(--branco);
+  font-weight: bold;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.btn-custom-verde:hover {
+  background-color: #2e7048;
+  color: var(--branco);
+}
+
+.btn-custom-laranja {
+  background-color: var(--laranja-liberta);
+  color: var(--branco);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-custom-laranja:hover {
+  background-color: #c4682b;
+  color: var(--branco);
+}
+
+.btn-custom-vermelho {
+  background-color: #dc3545;
+  color: var(--branco);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.btn-custom-vermelho:hover {
+  background-color: #b02a37;
+  color: var(--branco);
+}
+
+/* --- Tabela Estilizada (TEMA CLARO) --- */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background-color: var(--branco);
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden; 
+}
+
+.table-custom thead th {
+  background-color: #fdfaf8; 
+  color: var(--laranja-liberta);
+  border-bottom: 2px solid var(--laranja-liberta);
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 1.1rem;
+}
+
+.table-custom tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.table-custom tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table-custom tbody td {
+  color: var(--cinza-escuro); 
+  padding: 1.25rem;
+  vertical-align: middle;
+}
+
+.table-custom .action-buttons form {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.table-custom tbody tr.no-data td {
+  text-align: center;
+  color: #777;
+  padding: 2.5rem;
+}
+
+/* --- FORMULÁRIOS (AGORA EM TEMA CLARO) --- */
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--cinza-escuro); 
+}
+
+.form-control, .form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc; 
+  border-radius: 8px;
+  background-color: var(--branco); 
+  color: var(--cinza-escuro); 
+  box-sizing: border-box; 
+  font-family: 'Inter', sans-serif; 
+  font-size: 0.95rem;
+}
+
+.form-control:focus, .form-select:focus {
+   outline: none;
+   border-color: var(--laranja-liberta);
+   box-shadow: 0 0 0 3px rgba(232, 124, 51, 0.2); 
+}
+
+.form-check-label {
+  color: var(--cinza-escuro); 
+}
+
+.form-check-input {
+  margin-right: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.form-col-half {
+  flex: 1;
+  min-width: 300px;
+}
+
+fieldset.form-section {
+  border: 1px solid #2e7048; 
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+fieldset.form-section legend {
+  padding: 0 0.5rem;
+  color: var(--laranja-liberta); 
+  font-weight: bold;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+/* --- ESTA SEÇÃO FOI ALTERADA --- */
+.btn-secondary {
+  background-color: #e0e0e0; /* REVERTIDO para cinza */
+  color: var(--cinza-escuro); /* REVERTIDO para texto escuro */
+  font-weight: bold;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background-color: #c7c7c7; /* REVERTIDO para cinza mais escuro */
+}
