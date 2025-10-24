@@ -4,9 +4,7 @@
 /* --- Importação de Fontes --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-/* NOVA FONTE PARA O TÍTULO */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap'); /* Fonte para o Título da Página */
 
 /* --- Variáveis de Cor (baseado no seu design) --- */
 :root {
@@ -76,17 +74,11 @@ body {
   flex-wrap: wrap; /* Para responsividade */
 }
 
-/* * * ESSA FOI A SEÇÃO ALTERADA 
- *
- */
 .page-title {
   color: var(--laranja-liberta);
+  font-family: 'Nunito', sans-serif; /* Fonte arredondada */
   font-size: 2.75rem; /* Um pouco maior */
-  font-weight: 800; /* Extra-bold */
-  font-family: 'Nunito', sans-serif; /* A NOVA FONTE */
-  
-  /* --- MUDANÇAS APLICADAS --- */
-  /* Removemos o display, border-bottom e padding-bottom */
+  font-weight: 800; /* Mais peso */
 }
 
 .search-bar {
@@ -98,6 +90,7 @@ body {
   font-size: 1rem;
   font-weight: 500;
   margin-right: 0.5rem;
+  color: var(--cinza-escuro); /* Garante que seja legível */
 }
 
 .search-bar input[type="text"] {
@@ -111,14 +104,6 @@ body {
 .search-bar input[type="text"]:focus {
   outline: none;
   border-bottom-color: var(--laranja-liberta);
-}
-
-/* --- Caixa de Conteúdo (PARA FORMULÁRIOS) --- */
-.content-box {
-  background-color: var(--cinza-escuro); 
-  color: var(--branco);
-  padding: 2rem;
-  border-radius: 15px;
 }
 
 /* --- Botões --- */
@@ -216,7 +201,16 @@ body {
   padding: 2.5rem;
 }
 
-/* --- FORMULÁRIOS (AGORA EM TEMA CLARO) --- */
+/* --- ESTILOS PARA FOTO DO PET NA TABELA --- */
+.table-pet-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Deixa a imagem redonda */
+  object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+  border: 2px solid var(--verde-liberta);
+}
+
+/* --- FORMULÁRIOS (TEMA CLARO) --- */
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
@@ -237,9 +231,9 @@ body {
 }
 
 .form-control:focus, .form-select:focus {
-   outline: none;
-   border-color: var(--laranja-liberta);
-   box-shadow: 0 0 0 3px rgba(232, 124, 51, 0.2); 
+    outline: none;
+    border-color: var(--laranja-liberta);
+    box-shadow: 0 0 0 3px rgba(232, 124, 51, 0.2); 
 }
 
 .form-check-label {
@@ -262,7 +256,7 @@ body {
 }
 
 fieldset.form-section {
-  border: 1px solid #2e7048; 
+  border: 1px solid #2e7048; /* Borda verde escura */
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -280,10 +274,9 @@ fieldset.form-section legend {
   gap: 1rem;
 }
 
-/* --- ESTA SEÇÃO FOI ALTERADA --- */
 .btn-secondary {
-  background-color: #e0e0e0; /* REVERTIDO para cinza */
-  color: var(--cinza-escuro); /* REVERTIDO para texto escuro */
+  background-color: #e0e0e0; 
+  color: var(--cinza-escuro);
   font-weight: bold;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -293,5 +286,40 @@ fieldset.form-section legend {
   cursor: pointer;
 }
 .btn-secondary:hover {
-  background-color: #c7c7c7; /* REVERTIDO para cinza mais escuro */
+  background-color: #c7c7c7;
 }
+
+/* --- ESTILOS PARA PAGINAÇÃO --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem;
+  gap: 0.5rem;
+  flex-wrap: wrap; /* Para telas pequenas */
+}
+.pagination a, .pagination-ellipsis {
+  color: var(--verde-liberta);
+  font-weight: bold;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+  border: 1px solid var(--verde-liberta);
+  font-size: 0.9rem;
+}
+.pagination a:hover {
+  background-color: var(--laranja-liberta);
+  color: var(--branco);
+  border-color: var(--laranja-liberta);
+}
+.pagination a.active {
+  background-color: var(--verde-liberta);
+  color: var(--branco);
+}
+.pagination-ellipsis {
+  border: none;
+  padding: 0.75rem 0.25rem;
+  color: #aaa;
+}
+

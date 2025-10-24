@@ -1,128 +1,138 @@
 {% extends 'base.html' %}
 {% block title %}{{ titulo }}{% endblock %}
 {% block content %}
+      <h1 class="page-title">{{ titulo }}</h1>
+      
+      <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }} <!-- Proteção CSRF -->
 
-  <!-- Título da Página -->
-  <div class="page-header">
-    <h1 class="page-title">{{ titulo }}</h1>
-  </div>
+        <div class="form-row">
+          <!-- Coluna da Esquerda -->
+          <div class="form-col-half">
+            <fieldset class="form-section">
+              <legend>Informações Básicas</legend>
+              
+              <!-- Mostrar Foto Atual (apenas na página de editar) -->
+              {% if cachorro %} <!-- Só checa se estamos na pág. de editar -->
+                <div class="mb-3" style="text-align: center;">
+                  <label class="form-label">Foto Atual</label><br>
+                  <!-- 
+                    *** A CORREÇÃO ESTÁ AQUI TAMBÉM ***
+                    Usamos (cachorro.foto_perfil or 'default_pet.png')
+                  -->
+                  <img src="{{ url_for('static', filename='uploads/' + (cachorro.foto_perfil or 'default_pet.png')) }}" 
+                       alt="Foto de {{ cachorro.nome }}" 
+                       style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid var(--laranja-liberta);">
+                </div>
+              {% endif %}
 
-  <!-- 
-    Este formulário NÃO usa o "content-box" preto.
-    Ele usa as classes do nosso style.css (.form-row, .form-col-half, etc.)
-  -->
-  <form method="POST" action="">
-      {{ form.hidden_tag() }} <!-- Proteção CSRF -->
+              <!-- Campo de Upload de Foto -->
+              <div class="mb-3">
+                {{ form.foto.label(class="form-label") }}
+                {{ form.foto(class="form-control") }}
+                {% if form.foto.errors %}
+                    <div class="alert alert-danger" style="color: red; margin-top: 5px;">
+                        {% for error in form.foto.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                <small class="form-text text-muted" style="font-size: 0.8rem; color: #777;">Envie uma nova foto para alterar a atual.</small>
+              </div>
 
-      <!-- Div que agrupa as colunas do formulário -->
-      <div class="form-row">
-        
-        <!-- Coluna da Esquerda -->
-        <div class="form-col-half">
-          <fieldset class="form-section">
-            <legend>Informações Básicas</legend>
-            
-            <div style="margin-bottom: 1rem;">
+              <div class="mb-3">
                 {{ form.nome.label(class="form-label") }}
-                {{ form.nome(class="form-control", placeholder="Nome do pet") }}
-            </div>
-            <div style="margin-bottom: 1rem;">
+                {{ form.nome(class="form-control") }}
+              </div>
+              <div class="mb-3">
                 {{ form.data_nascimento.label(class="form-label") }}
                 {{ form.data_nascimento(class="form-control", type="date") }}
-            </div>
-            <div style="margin-bottom: 1rem;">
+              </div>
+              <div class="mb-3">
                 {{ form.proprietario.label(class="form-label") }}
-                {{ form.proprietario(class="form-control", placeholder="Nome do dono") }}
-            </div>
-             <div style="margin-bottom: 1rem;">
+                {{ form.proprietario(class="form-control") }}
+              </div>
+              <div class="mb-3">
                 {{ form.genero.label(class="form-label") }}
                 {{ form.genero(class="form-select") }}
-            </div>
-            <div style="margin-bottom: 1rem;">
+              </div>
+              <div class="mb-3">
                 {{ form.classificacao.label(class="form-label") }}
-                {{ form.classificacao(class="form-control", placeholder="Ex: Porte Pequeno, Raça...") }}
-            </div>
-            <div style="margin-bottom: 1rem;">
+                {{ form.classificacao(class="form-control") }}
+              </div>
+               <div class="mb-3">
                 {{ form.grau_energia.label(class="form-label") }}
                 {{ form.grau_energia(class="form-select") }}
-            </div>
-            <div style="margin-bottom: 1rem;">
-                {{ form.restricao_alimentos.label(class="form-label") }}
-                {{ form.restricao_alimentos(class="form-control", rows=3, placeholder="Alguma alergia ou restrição?") }}
-            </div>
-          </fieldset>
+              </div>
+            </fieldset>
+          </div>
 
-          <fieldset class="form-section">
-            <legend>Atividades e Frequência</legend>
-            <div style="margin-bottom: 1rem;">
-                {{ form.frequencia_semanal.label(class="form-label") }}
-                {{ form.frequencia_semanal(class="form-control", type="number", min="1") }}
-            </div>
-             <div style="margin-bottom: 1rem;">
-                {{ form.duracao_passeio.label(class="form-label") }}
-                {{ form.duracao_passeio(class="form-control", type="number", min="0") }}
-            </div>
-             <div style="margin-bottom: 1rem;">
-                {{ form.grupo_passeio.label(class="form-label") }}
-                {{ form.grupo_passeio(class="form-control", placeholder="Ex: Turma da manhã, Cães reativos...") }}
-            </div>
-          </fieldset>
-        </div>
-
-        <!-- Coluna da Direita (Checkboxes) -->
-        <div class="form-col-half">
-          <fieldset class="form-section">
-            <legend>Comportamento e Características</legend>
-            
-            <div style="margin-bottom: 1rem;" class="form-check">
+          <!-- Coluna da Direita -->
+          <div class="form-col-half">
+            <fieldset class="form-section">
+              <legend>Comportamento e Características</legend>
+              <div class="form-check mb-3">
                 {{ form.castrado(class="form-check-input") }}
                 {{ form.castrado.label(class="form-check-label") }}
-            </div>
-            <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.reativo_caes(class="form-check-input") }}
                 {{ form.reativo_caes.label(class="form-check-label") }}
-            </div>
-            <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.reativo_pessoas(class="form-check-input") }}
                 {{ form.reativo_pessoas.label(class="form-check-label") }}
-            </div>
-             <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.gosta_contato(class="form-check-input") }}
                 {{ form.gosta_contato.label(class="form-check-label") }}
-            </div>
-            <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.responde_estimulos(class="form-check-input") }}
                 {{ form.responde_estimulos.label(class="form-check-label") }}
-            </div>
-             <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.passeia_na_praca(class="form-check-input") }}
                 {{ form.passeia_na_praca.label(class="form-check-label") }}
-            </div>
-             <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.enriquecimento_ambiental(class="form-check-input") }}
                 {{ form.enriquecimento_ambiental.label(class="form-check-label") }}
-            </div>
-             <div style="margin-bottom: 1rem;" class="form-check">
+              </div>
+              <div class="form-check mb-3">
                 {{ form.atividade_mental(class="form-check-input") }}
                 {{ form.atividade_mental.label(class="form-check-label") }}
-            </div>
-          </fieldset>
+              </div>
+            </fieldset>
 
-           <fieldset class="form-section">
-            <legend>Histórico</legend>
-             <div style="margin-bottom: 1rem;">
+            <fieldset class="form-section">
+              <legend>Histórico</legend>
+              <div class="mb-3">
+                {{ form.frequencia_semanal.label(class="form-label") }}
+                {{ form.frequencia_semanal(class="form-control") }}
+              </div>
+              <div class="mb-3">
+                {{ form.duracao_passeio.label(class="form-label") }}
+                {{ form.duracao_passeio(class="form-control") }}
+              </div>
+              <div class="mb-3">
+                {{ form.grupo_passeio.label(class="form-label") }}
+                {{ form.grupo_passeio(class="form-control") }}
+              </div>
+              <div class="mb-3">
+                {{ form.restricao_alimentos.label(class="form-label") }}
+                {{ form.restricao_alimentos(class="form-control", rows=3) }}
+              </div>
+              <div class="mb-3">
                 {{ form.presencas.label(class="form-label") }}
-                {{ form.presencas(class="form-control", rows=5, placeholder="Ex: 20/10 - ok, 22/10 - faltou...") }}
-            </div>
-          </fieldset>
+                {{ form.presencas(class="form-control", rows=3) }}
+              </div>
+            </fieldset>
+          </div>
         </div>
-      </div>
 
-      <!-- Botões de Ação com nosso estilo personalizado -->
-      <div class="form-actions">
+        <!-- Botões -->
+        <div class="form-actions">
           {{ form.submit(class="btn-custom-verde") }}
           <a href="{{ url_for('index') }}" class="btn-secondary">Cancelar</a>
-      </div>
-  </form>
-  
+        </div>
+      </form>
 {% endblock %}
